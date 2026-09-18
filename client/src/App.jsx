@@ -8,6 +8,21 @@ const sparkles = Array.from({ length: 18 }, (_, index) => ({
   size: `${12 + (index % 4) * 5}px`,
 }));
 
+const floatingHearts = [
+  { id: 1, left: '6%', top: '9%', size: '24px', delay: '.2s', duration: '5.8s', opacity: '.42', symbol: '♡' },
+  { id: 2, left: '15%', top: '26%', size: '15px', delay: '1.1s', duration: '4.7s', opacity: '.48', symbol: '♥' },
+  { id: 3, left: '24%', top: '6%', size: '18px', delay: '2.3s', duration: '5.3s', opacity: '.37', symbol: '♡' },
+  { id: 4, left: '34%', top: '19%', size: '12px', delay: '.7s', duration: '4.2s', opacity: '.55', symbol: '♥' },
+  { id: 5, left: '43%', top: '8%', size: '21px', delay: '1.6s', duration: '6.1s', opacity: '.36', symbol: '♡' },
+  { id: 6, left: '54%', top: '25%', size: '14px', delay: '2.8s', duration: '4.9s', opacity: '.46', symbol: '♥' },
+  { id: 7, left: '63%', top: '12%', size: '16px', delay: '.4s', duration: '5.5s', opacity: '.4', symbol: '♡' },
+  { id: 8, left: '71%', top: '31%', size: '13px', delay: '1.8s', duration: '4.5s', opacity: '.48', symbol: '♥' },
+  { id: 9, left: '80%', top: '7%', size: '25px', delay: '2.5s', duration: '6.2s', opacity: '.36', symbol: '♡' },
+  { id: 10, left: '91%', top: '21%', size: '16px', delay: '.9s', duration: '5.1s', opacity: '.44', symbol: '♥' },
+  { id: 11, left: '3%', top: '43%', size: '15px', delay: '2s', duration: '5.7s', opacity: '.29', symbol: '♡' },
+  { id: 12, left: '95%', top: '46%', size: '20px', delay: '1.3s', duration: '4.8s', opacity: '.3', symbol: '♡' },
+];
+
 function GiftBox({ phase, onOpen }) {
   const isOpening = phase === 'opening';
   const isOpened = phase === 'opened';
@@ -116,6 +131,25 @@ function App() {
             key={sparkle.id}
             style={{ left: sparkle.left, top: sparkle.top, animationDelay: sparkle.delay, width: sparkle.size, height: sparkle.size }}
           />
+        ))}
+      </div>
+
+      <div className="heart-field" aria-hidden="true">
+        {floatingHearts.map((heart) => (
+          <span
+            className="floating-heart"
+            key={heart.id}
+            style={{
+              left: heart.left,
+              top: heart.top,
+              fontSize: heart.size,
+              opacity: heart.opacity,
+              animationDelay: heart.delay,
+              animationDuration: heart.duration,
+            }}
+          >
+            {heart.symbol}
+          </span>
         ))}
       </div>
 
