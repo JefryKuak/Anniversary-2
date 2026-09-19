@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const sparkles = Array.from({ length: 18 }, (_, index) => ({
   id: index,
@@ -72,9 +72,19 @@ function App() {
   const [phase, setPhase] = useState('idle');
   const [showModal, setShowModal] = useState(false);
   const [currentPath, setCurrentPath] = useState(() => window.location.pathname);
+  const audioRef = useRef(null);
 
   function openGift() {
     if (phase !== 'idle') return;
+
+    const audio = audioRef.current;
+    if (audio) {
+      audio.volume = 0.18;
+      audio.play().catch((error) => {
+        console.warn('Backsound belum dapat diputar:', error);
+      });
+    }
+
     setPhase('opening');
   }
 
@@ -105,21 +115,35 @@ function App() {
   }
 
   const isGalleryPlaceholder = currentPath === '/gallery';
+  const backgroundMusic = (
+    <audio
+      ref={audioRef}
+      src="/audio/love-wte.mp3"
+      loop
+      preload="auto"
+      onError={() => console.warn('File backsound tidak ditemukan. Pastikan file ada di public/audio/love-wte.mp3.')}
+    />
+  );
 
   if (isGalleryPlaceholder) {
     return (
-      <main className="next-chapter">
-        <div className="next-chapter__bubble">♡</div>
-        <p className="eyebrow">Chapter berikutnya</p>
-        <h1>Galeri kenangan kita<br />sedang disiapkan.</h1>
-        <p>Landing page sudah selesai—berikutnya kita akan mengisinya dengan foto-foto dan cerita bulanan kalian.</p>
-        <button className="text-button" onClick={() => window.history.back()}>← Kembali ke hadiah</button>
-      </main>
+      <>
+        {backgroundMusic}
+        <main className="next-chapter">
+          <div className="next-chapter__bubble">♡</div>
+          <p className="eyebrow">Chapter berikutnya</p>
+          <h1>Galeri kenangan kita<br />sedang disiapkan.</h1>
+          <p>Landing page sudah selesai—berikutnya kita akan mengisinya dengan foto-foto dan cerita bulanan kalian.</p>
+          <button className="text-button" onClick={() => window.history.back()}>← Kembali ke hadiah</button>
+        </main>
+      </>
     );
   }
 
   return (
-    <main className={`landing ${phase === 'opened' ? 'landing--opened' : ''}`}>
+    <>
+      {backgroundMusic}
+      <main className={`landing ${phase === 'opened' ? 'landing--opened' : ''}`}>
       <div className="cloud cloud--one" />
       <div className="cloud cloud--two" />
       <div className="cloud cloud--three" />
@@ -169,8 +193,9 @@ function App() {
       </section>
 
       <footer className="landing__footer">Made with all my love <span aria-hidden="true">✦</span></footer>
-      {showModal && <CelebrationModal onContinue={continueToGallery} />}
-    </main>
+        {showModal && <CelebrationModal onContinue={continueToGallery} />}
+      </main>
+    </>
   );
 }
 
